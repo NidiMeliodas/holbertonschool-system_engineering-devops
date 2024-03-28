@@ -1,0 +1,107 @@
+  +-------------+
+  |   User      |
+  +-------------+
+          |
+          | Request (www.foobar.com)
+          v
++-------------------------+
+|           SSL           |
+|        Certificate      |
++-------------------------+
+          |
+          | HTTPS Request
+          v
++-------------------+
+|        DNS        |
+| (Resolve to IP)   |
+|       8.8.8.8     |
++-------------------+
+          |
+          | HTTP(S) Request
+          v
+   +-------------+
+   | Load        |
+   | Balancer    |
+   | (HAproxy)   |
+   +-------------+
+          |
+          v
+  +--------------+-----------+-------------+
+  |  M Client 1 / M client 2 / M client 3  |
+  +--------------+-----------+-------------+
+                    |
+                    v
+  +-------------+--------+-------------+
+  |Firewall 1 / Firewall 2 / Firewall 3|
+  +-------------+--------+-------------+
+          |-------------------+
+          | HTTP(S) Request   |
+          v                   v
+  +-------------+------+-------------+
+  |  Server 1 / Server 2 / Server 3  |
+  +-------------+------+-------------+
+          |                   |
+          |  HTTP(S) Request  | 
+          v                   v
+        +-----------------------+
+        |      Web Server       |
+        |      (Nginx)          |
+        |                       |
+        |       ^               |
+        |       | HTTP(S) Req   |
+        |       |               |
+        |       v               |
+        |      Application      |
+        |       Server          |
+        |      (Code Base)      |
+        |                       |
+        |       ^               |
+        |       | Database Req  |
+        |       |               |
+        |       v               |
+        |       Database        |
+        |       (MySQL)         |
+        +-----------------------+
+          |
+          | HTTP(S) Response
+          v
+  +-------------+
+  |   User      |
+  +-------------+
+
+
+
+### Why add additional elements?
+Each additional element in the infrastructure serves a specific purpose to enhance performance, reliability, or security:
+- **Firewalls:** Firewalls are added to control and filter incoming and outgoing network traffic based on predefined rules. They serve as a barrier against unauthorized access and malicious attacks, protecting the network from security threats.
+- **HTTPS:** Traffic is served over HTTPS to encrypt data transmitted between clients and servers, ensuring confidentiality and integrity. This encryption prevents eavesdropping, data tampering, and man-in-the-middle attacks, enhancing security.
+- **Monitoring:** Monitoring tools are used to track system performance, detect issues, and ensure the availability and reliability of services. They provide insights into resource utilization, application health, and network traffic patterns, enabling proactive management and troubleshooting.
+- **Load balancer termination:** Terminating SSL at the load balancer level involves decrypting HTTPS traffic before forwarding it to backend servers. This allows the load balancer to inspect and manipulate the traffic, improving performance and offloading encryption overhead from backend servers.
+
+### What are firewalls for?
+Firewalls are network security devices that monitor and control incoming and outgoing traffic based on predefined security rules. They act as a barrier between a trusted internal network and untrusted external networks (such as the internet), preventing unauthorized access and protecting against cyber threats.
+
+### Why is the traffic served over HTTPS?
+Traffic is served over HTTPS to encrypt data transmitted between clients (such as web browsers) and servers. HTTPS encrypts sensitive information, including login credentials, personal data, and financial transactions, protecting it from interception and unauthorized access by malicious actors.
+
+### What monitoring is used for?
+Monitoring is used to track the performance, availability, and health of IT systems and services. It helps detect and diagnose issues, optimize resource utilization, and ensure the reliability and efficiency of infrastructure components. Monitoring tools collect data on various metrics, such as CPU usage, memory usage, network traffic, and application response times.
+
+### How the monitoring tool is collecting data?
+Monitoring tools collect data through various methods, including:
+- **Agent-based monitoring:** Agents installed on servers gather performance metrics and send them to a central monitoring server.
+- **Agentless monitoring:** Remote probes or APIs are used to collect data from network devices, servers, and applications without installing agents.
+- **SNMP (Simple Network Management Protocol):** SNMP-enabled devices transmit performance data to a central monitoring system, allowing administrators to monitor network devices and services.
+
+### What to do if you want to monitor your web server QPS?
+To monitor the QPS (Queries Per Second) of a web server, you can:
+1. Deploy a monitoring tool capable of collecting and analyzing web server metrics.
+2. Configure the monitoring tool to track HTTP request counts over time.
+3. Set up alerts to notify administrators if QPS exceeds predefined thresholds.
+4. Monitor server performance metrics (such as CPU utilization, memory usage, and network traffic) to identify resource bottlenecks that may impact QPS.
+5. Analyze historical data to identify trends and patterns in web server traffic, enabling capacity planning and optimization efforts.
+
+### Issues with the infrastructure:
+1. **Terminating SSL at the load balancer level:** This can be an issue because it requires the load balancer to decrypt and re-encrypt HTTPS traffic, introducing potential security risks and performance overhead. Additionally, it may limit visibility into encrypted traffic for security monitoring and analysis purposes.
+2. **Having only one MySQL server capable of accepting writes:** This creates a single point of failure (SPOF) for write operations, as any downtime or failure of the MySQL server can disrupt data writes and impact application functionality. It also limits scalability and fault tolerance, as the database cannot handle increased write loads or provide redundancy.
+3. **Having servers with all the same components (database, web server, and application server) might be a problem:** This can lead to a lack of diversity and increased vulnerability to common-mode failures. If all servers have the same configuration and software stack, they may all be susceptible to the same security vulnerabilities, software bugs, or performance issues, increasing the risk of widespread outages or compromises. Additionally, it may hinder flexibility and adaptability in managing and scaling the infrastructure.

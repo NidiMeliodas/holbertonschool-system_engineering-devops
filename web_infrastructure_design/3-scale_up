@@ -1,0 +1,93 @@
+   +-------------+
+  |   User      |
+  +-------------+
+      |
+      | Request (www.foobar.com)
+      v
++-------------------------+
+|           SSL           |
+|        Certificate      |
++-------------------------+
+      |
+      | HTTPS Request
+      v
++-------------------+
+|        DNS        |
+| (Resolve to IP)   |
+|       8.8.8.8     |
++-------------------+
+      |
+      | HTTP(S) Request
+      v
+   +-------------+
+   | Load        |
+   | Balancer    |
+   | (HAproxy)   |
+   +-------------+
+      |
+      v
+  +-----------------------+   +-----------------------+   +-----------------------+
+  |      Monitoring       |   |      Monitoring       |   |      Monitoring       |
+  |        Client 1       |   |        Client 2       |   |        Client 3       |
+  +-----------------------+   +-----------------------+   +-----------------------+
+          |                           |                           |
+          v                           v                           v
+  +-------------+             +-------------+             +-------------+
+  |   Firewall  |             |   Firewall  |             |   Firewall  |
+  |      1      |             |      2      |             |      3      |
+  +-------------+             +-------------+             +-------------+
+          |                           |                           |
+          |---------------------------|---------------------------|
+          | HTTP(S) Request           | HTTP(S) Request           | 
+          v                           v                           v
+  +-------------+             +-------------+             +-------------+
+  |   Server 1  |             |   Server 2  |             |   Server 3  |
+  +-------------+             +-------------+             +-------------+
+          |                           |                           |
+          |  HTTP(S) Request          | HTTP(S) Request          | 
+          v                           v                           v
+    +-----------------------+   +-----------------------+   +-----------------------+
+    |      Web Server       |   |      Web Server       |   |      Web Server       |
+    |      (Nginx)          |   |      (Nginx)          |   |      (Nginx)          |
+    |                       |   |                       |   |                       |
+    |       ^               |   |       ^               |   |       ^               |
+    |       | HTTP(S) Req   |   |       | HTTP(S) Req   |   |       | HTTP(S) Req   |
+    |       |               |   |       |               |   |       |               |
+    |       v               |   |       v               |   |       v               |
+    |      Application      |   |      Application      |   |      Application      |
+    |       Server          |   |       Server          |   |       Server          |
+    |      (Code Base)      |   |      (Code Base)      |   |      (Code Base)      |
+    |                       |   |                       |   |                       |
+    |       ^               |   |       ^               |   |       ^               |
+    |       | Database Req  |   |       | Database Req  |   |       | Database Req  |
+    |       |               |   |       |               |   |       |               |
+    |       v               |   |       v               |   |       v               |
+    |       Database        |   |       Database        |   |       Database        |
+    |       (MySQL)         |   |       (MySQL)         |   |       (MySQL)         |
+    +-----------------------+   +-----------------------+   +-----------------------+
+          |                           |                           |
+          | HTTP(S) Response         | HTTP(S) Response         |
+          v                           v                           v
+  +-------------+             +-------------+             +-------------+
+  |   User      |             |   User      |             |   User      |
+  +-------------+             +-------------+             +-------------+
+
+
+
+1. **Load Balancer:**
+   - **Purpose:** Load balancers distribute incoming network traffic across multiple servers to prevent any single server from becoming overwhelmed, thus improving reliability and ensuring high availability.
+   - **Why it's added:** Adding a load balancer helps distribute the workload evenly among servers, preventing bottlenecks and improving overall performance. It also provides fault tolerance by rerouting traffic away from failed or underperforming servers.
+
+2. **Firewall:**
+   - **Purpose:** Firewalls control and filter incoming and outgoing network traffic based on predefined security rules. They act as a barrier between trusted internal networks and untrusted external networks, protecting against unauthorized access and malicious attacks.
+   - **Why it's added:** Firewalls are added to enhance network security by enforcing access control policies, blocking malicious traffic, and preventing unauthorized access to sensitive data or resources.
+
+3. **HTTPS (SSL/TLS Encryption):**
+   - **Purpose:** HTTPS encrypts data transmitted between clients (such as web browsers) and servers, ensuring confidentiality and integrity. It prevents eavesdropping, data tampering, and man-in-the-middle attacks.
+   - **Why it's added:** HTTPS is added to protect sensitive information, such as login credentials, personal data, and financial transactions, from interception and unauthorized access. It enhances security and builds trust with users by providing a secure communication channel.
+
+4. **Monitoring Tools:**
+   - **Purpose:** Monitoring tools track and analyze system performance, availability, and health metrics in real-time. They provide insights into resource utilization, detect issues, and ensure the reliability of infrastructure components.
+   - **Why they're added:** Monitoring tools are added to proactively identify and resolve issues, optimize resource usage, and ensure service availability. They help administrators detect anomalies, troubleshoot problems, and make informed decisions to improve system performance and reliability.
+
+In summary, each additional element in the infrastructure serves a specific purpose to enhance performance, reliability, security, and manageability. By adding load balancers, firewalls, HTTPS encryption, and monitoring tools, organizations can build robust and secure infrastructures that meet the needs of their users and protect against various threats and vulnerabilities.

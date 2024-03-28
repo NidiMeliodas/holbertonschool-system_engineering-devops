@@ -1,0 +1,83 @@
+  +-------------+
+  |   User      |
+  +-------------+
+          |
+          | Request (www.foobar.com)
+          v
++-------------------+
+|        DNS        |
+| (Resolve to IP)   |
+|       8.8.8.8     |
++-------------------+
+          |
+          | HTTP(S) Request
+          v
+   +-------------+
+   | Load        |
+   | Balancer    |
+   | (HAproxy)   |
+   +-------------+
+          |-------------------+
+          | HTTP(S) Request   |
+          v                   v
+  +-------------+      +-------------+
+  |   Server    |      |   Server    |
+  +-------------+      +-------------+
+          |                   |
+          |  HTTP(S) Request  | 
+          v                   v
+        +-----------------------+
+        |      Web Server       |
+        |      (Nginx)          |
+        |                       |
+        |       ^               |
+        |       | HTTP(S) Req   |
+        |       |               |
+        |       v               |
+        |      Application      |
+        |       Server          |
+        |      (Code Base)      |
+        |                       |
+        |       ^               |
+        |       | Database Req  |
+        |       |               |
+        |       v               |
+        |       Database        |
+        |       (MySQL)         |
+        +-----------------------+
+          |
+          | HTTP(S) Response
+          v
+  +-------------+
+  |   User      |
+  +-------------+
+
+
+
+### Why add additional elements?
+Each additional element in the infrastructure serves a specific purpose to enhance performance, reliability, or security. For example:
+- **Load balancer:** Distributes incoming traffic across multiple servers to prevent overload and ensure high availability.
+- **Firewall:** Protects the network from unauthorized access and malicious attacks.
+- **HTTPS:** Encrypts data transmitted between clients and servers to ensure confidentiality and integrity.
+- **Monitoring:** Tracks system performance and detects issues for timely resolution, ensuring optimal operation.
+
+### Load balancer distribution algorithm and setup:
+The load balancer is configured with a round-robin distribution algorithm. This algorithm evenly distributes incoming requests among the backend servers in a circular manner, ensuring each server receives an equal share of the traffic.
+
+### Active-Active vs. Active-Passive setup:
+- **Active-Active:** In an Active-Active setup, all servers are actively serving traffic simultaneously. This configuration provides higher scalability and resource utilization but requires careful management to avoid conflicts and data inconsistency.
+- **Active-Passive:** In an Active-Passive setup, one server (active) handles incoming traffic, while the other server (passive) remains on standby, ready to take over if the active server fails. This configuration provides redundancy and failover capability but may underutilize resources during normal operation.
+
+### Database Primary-Replica (Master-Slave) cluster:
+In a Primary-Replica cluster, also known as a Master-Slave cluster, the primary node (master) handles write operations and replicates data to one or more replica nodes (slaves). The replica nodes serve read-only queries and maintain a copy of the data synchronized with the primary node. This setup improves read scalability, fault tolerance, and data redundancy.
+
+### Difference between Primary and Replica nodes:
+- **Primary node:** Handles write operations, such as inserting, updating, and deleting data. It ensures data consistency and integrity for the entire database.
+- **Replica node:** Receives data replication from the primary node and serves read-only queries from clients. While replica nodes provide scalability for read operations, they do not accept write operations directly.
+
+### Issues with the infrastructure:
+- **Single Points of Failure (SPOF):** Potential SPOFs include a lack of redundancy in critical components such as servers, load balancers, and databases, which can lead to service disruptions if any component fails.
+- **Security issues:** Absence of a firewall exposes the infrastructure to unauthorized access and cyber threats. Lack of HTTPS encryption leaves data vulnerable to interception and tampering during transmission.
+- **Monitoring deficiency:** Without proper monitoring, it becomes challenging to detect performance issues, security breaches, or system failures promptly, leading to prolonged downtime and degraded user experience.
+
+Addressing these issues by implementing redundancy, security measures, and robust monitoring practices can enhance the reliability, security, and performance of the infrastructure.

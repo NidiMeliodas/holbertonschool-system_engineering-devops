@@ -1,0 +1,75 @@
+  +-------------+
+  |   User      |
+  +-------------+
+          |
+          | Request (www.foobar.com)
+          v
++-------------------+
+|        DNS        |
+| (Resolve to IP)   |
+|       8.8.8.8     |
++-------------------+
+          |
+          | HTTP(S) Request
+          v
++-----------------------+
+|      Web Server       |
+|      (Nginx)          |
+|                       |
+|       ^               |
+|       | HTTP(S) Req   |
+|       |               |
+|       v               |
+|      Application      |
+|       Server          |
+|      (Code Base)      |
+|                       |
+|       ^               |
+|       | Database Req  |
+|       |               |
+|       v               |
+|       Database        |
+|       (MySQL)         |
++-----------------------+
+          |
+          | HTTP(S) Response
+          v
+  +-------------+
+  |   User      |
+  +-------------+
+
+
+
+### What is a server?
+A server is a computer or software system that provides functionality or services to other computers, known as clients, over a network. Servers can provide various services such as file storage, email, web hosting, database management, and more.
+
+### What is the role of the domain name?
+The domain name serves as a human-readable alias for the IP address of a server hosting a website or service. It helps users easily identify and access websites without needing to remember numerical IP addresses.
+
+### What is the DNS record type for www in www.foobar.com?
+The DNS record type for www in www.foobar.com is typically a CNAME (Canonical Name) record, which serves as an alias for the domain's primary A (Address) record, pointing to the server's IP address.
+
+### What is the role of the web server?
+The web server's role is to handle HTTP requests from clients (such as web browsers) and respond with web content, which can include HTML pages, images, CSS files, JavaScript, etc. It processes these requests and serves the requested resources to users.
+
+### What is the role of the application server?
+The application server hosts and executes the business logic and application code of a web application. It handles dynamic content generation, database transactions, user authentication, and other application-specific tasks.
+
+### What is the role of the database?
+The database stores and manages structured data used by the web application. It provides a mechanism for storing, retrieving, updating, and managing data efficiently. Common database systems include MySQL, PostgreSQL, MongoDB, etc.
+
+### What does the server use to communicate with the user's computer requesting the website?
+The server communicates with the user's computer using the HTTP (or HTTPS) protocol. This communication occurs over the Internet or an internal network, with the server responding to HTTP requests sent by the user's web browser.
+
+Now, let's address the challenges posed by this infrastructure:
+
+### Single Point of Failure (SPOF)
+SPOF refers to any component in the infrastructure whose failure can lead to the entire system's failure. It can be mitigated by introducing redundancy, such as backup servers or load balancers, to ensure continued operation in case of failure.
+
+### Downtime during maintenance (such as deploying new code, restarting the web server)
+Maintenance activities like deploying new code or restarting servers can result in downtime, affecting user access to services. To minimize impact, organizations often implement strategies like rolling deployments or scheduling maintenance during off-peak hours.
+
+### Inability to scale if incoming traffic is too high
+If incoming traffic exceeds the capacity of the infrastructure, services may become slow or unavailable. Scaling strategies such as horizontal scaling (adding more servers) or vertical scaling (upgrading server resources) can address this issue, along with load balancing to distribute traffic efficiently.
+
+By addressing these challenges and understanding the roles of different components in the infrastructure, organizations can build robust and scalable systems to meet user demands effectively.
